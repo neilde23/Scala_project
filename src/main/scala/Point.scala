@@ -3,21 +3,11 @@ import scala.util.Try
 case class Point(x: Double, y: Double)
 
 object Point {
-    def csvToPoint(line: List[String]): Option[Point] = {
-        if (line.length == 2) {
-            Try {
-                val x = line.head.toDouble
-                val y = line(1).toDouble
-                Point(x, y)
-            }.toOption
-        } else {
-            None
+    def lineToPoint(line: List[String]): Option[Point] = {
+        line match {
+            case x :: y :: Nil if Try(x.toDouble).isSuccess && Try(y.toDouble).isSuccess =>
+                Some(Point(x.toDouble, y.toDouble))
+            case _ => None
         }
     }
-}
-
-object Main extends App {
-    println(Point.csvToPoint("42" :: "21" :: Nil))
-    println(Point.csvToPoint("42" :: "invalid" :: Nil))
-    println(Point.csvToPoint("42" :: Nil))
 }
